@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP:Accept-Encoding} br
+    RewriteCond %{REQUEST_FILENAME}.br -f
+    RewriteRule ^(.*)$ $1.br [QSA,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.br$">
+        Header set Content-Encoding "br"
+        Header set Vary "Accept-Encoding"
+        # Set Content-Type for Unity files
+        Header set Content-Type "application/javascript" "expr=%{REQUEST_FILENAME} =~ /\.js\.br$/"
+        Header set Content-Type "application/json" "expr=%{REQUEST_FILENAME} =~ /\.json\.br$/"
+        Header set Content-Type "application/octet-stream" "expr=%{REQUEST_FILENAME} =~ /\.wasm\.br$/"
+        Header set Content-Type "application/x-unityweb" "expr=%{REQUEST_FILENAME} =~ /\.data\.br$/"
+    </FilesMatch>
+</IfModule>
